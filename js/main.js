@@ -169,13 +169,13 @@ inputs.forEach(el => {
          localStorage.setItem("map-y-6", el.value)
       }
       if (el.classList.value.includes("name-city-1")) {
-         localStorage.setItem("name-city-1", el.value)
+         localStorage.setItem("nmct-1", el.value)
       }
       if (el.classList.value.includes("name-city-2")) {
-         localStorage.setItem("name-city-2", el.value)
+         localStorage.setItem("nmct-2", el.value)
       }
       if (el.classList.value.includes("name-city-3")) {
-         localStorage.setItem("name-city-3", el.value)
+         localStorage.setItem("nmct-3", el.value)
       }
       if (el.classList.value.includes("start-date-vehichal")) {
          localStorage.setItem("start-date-vehichal", el.value)

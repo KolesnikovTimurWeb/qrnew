@@ -16,6 +16,10 @@
    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <style>
+   .maplibregl-ctrl-attrib.maplibregl-compact-show {
+      display: none !important;
+   }
+
    .maplibregl-ctrl-attrib-inner {
       display: none;
    }
@@ -1078,6 +1082,11 @@
    </main>
 
 </body>
+</script>
+<script src="https://unpkg.com/@esri/arcgis-rest-request@4.0.0/dist/bundled/request.umd.js"></script>
+<script src="https://unpkg.com/@esri/arcgis-rest-routing@4.0.0/dist/bundled/routing.umd.js"></script>
+
+
 <script>
    var url = window.location;
    let params = (new URL(url)).searchParams;
@@ -1105,61 +1114,47 @@
 
    const map = new maplibregl.Map({
       container: 'map',
-      style: 'https://api.maptiler.com/maps/30136180-41b3-4b46-8c39-f37f95e16e18/style.json?key=xSPWILBLkNJBdAg3hKnc',
+      style: 'https://api.maptiler.com/maps/streets/style.json?key=xSPWILBLkNJBdAg3hKnc',
       center: [55, 37],
       zoom: 4
    });
 
-   map.on('load', () => {
-      map.addSource('lines', {
-         'type': 'geojson',
-         'data': {
-            'type': 'FeatureCollection',
-            'features': [
-               {
-                  'type': 'Feature',
-                  'properties': {
-                     'color': '#0a39c2' // red
-                  },
-                  'geometry': {
-                     'type': 'LineString',
-                     'coordinates': [
+   // map.on('load', () => {
+   //    map.addSource('route', {
+   //       'type': 'geojson',
+   //       'data': {
+   //          'type': 'Feature',
+   //          'properties': {},
+   //          'geometry': {
+   //             'type': 'LineString',
+   //             'coordinates': [
+   //                [map1Y, map1X],
+   //                [map2Y, map2X],
+   //                [map3Y, map3X],
+   //                [map4Y, map4X],
+   //                [map5Y, map5X],
+   //                [map6Y, map6X],
+   //             ]
+   //          }
+   //       }
+   //    })
 
-                     ]
-                  }
-               },
-               {
-                  'type': 'Feature',
-                  'properties': {
-                     'color': '#0a39c2' // blue
-                  },
-                  'geometry': {
-                     'type': 'LineString',
-                     'coordinates': [
-                        [map1Y, map1X],
-                        [map2Y, map2X],
-                        [map3Y, map3X],
-                        [map4Y, map4X],
-                        [map5Y, map5X],
-                        [map6Y, map6X],
-                     ]
-                  }
-               }
-            ]
-         }
-      });
-      map.addLayer({
-         'id': 'lines',
-         'type': 'line',
-         'source': 'lines',
-         'paint': {
-            'line-width': 3,
-            // Use a get expression (https://maplibre.org/maplibre-style-spec/expressions/#get)
-            // to set the line-color to a feature property value.
-            'line-color': ['get', 'color']
-         }
-      });
-   });
+   //    map.addLayer({
+   //       'id': 'route',
+   //       'type': 'line',
+   //       'source': 'route',
+   //       'layout': {
+   //          'line-join': 'round',
+   //          'line-cap': 'round'
+   //       },
+   //       'paint': {
+   //          'line-width': 3,
+   //          // Use a get expression (https://maplibre.org/maplibre-style-spec/expressions/#get)
+   //          // to set the line-color to a feature property value.
+   //          'line-color': ['get', 'color']
+   //       }
+   //    });
+   // });
 
 
 
@@ -1388,6 +1383,38 @@
 
    }
 
+</script>
+<script>
+   const myAPIKey = "03535537df324b2c9c772b3c55867241";
+   const fromWaypoint = [map1X, map1Y]; // latutude, longitude
+   const toWaypoint = [map6X, map6Y]; // latitude, longitude
+   const url2 = `https://api.geoapify.com/v1/routing?waypoints=${fromWaypoint.join(',')}|${toWaypoint.join(',')}&mode=drive&details=instruction_details&apiKey=${myAPIKey}`;
+   let resultData
+   fetch(url2).then(res => res.json()).then(result => {
+      resultData = result
+   }, error => console.log(err));
+   map.on('load', () => {
+      map.addSource('route', {
+         type: 'geojson',
+         data: resultData
+      });
+
+      map.addLayer({
+         'id': 'route-layer',
+         'type': 'line',
+         'source': 'route',
+         'layout': {
+            'line-cap': "round",
+            'line-join': "round"
+         },
+         'paint': {
+            'line-width': 3,
+            // Use a get expression (https://maplibre.org/maplibre-style-spec/expressions/#get)
+            // to set the line-color to a feature property value.
+            'line-color': ['get', 'color']
+         }
+      });
+   });
 </script>
 
 </html>
