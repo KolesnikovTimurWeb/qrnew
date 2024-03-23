@@ -1387,8 +1387,11 @@
 <script>
    const myAPIKey = "03535537df324b2c9c772b3c55867241";
    const fromWaypoint = [map1X, map1Y]; // latutude, longitude
+   const fromWay2 = [map2X, map2Y]; // latutude, longitude
+   const fromWay3 = [map3X, map3Y]; // latutude, longitude
+   const fromWay4 = [map4X, map4Y]; // latutude, longitude
    const toWaypoint = [map6X, map6Y]; // latitude, longitude
-   const url2 = `https://api.geoapify.com/v1/routing?waypoints=${fromWaypoint.join(',')}|${toWaypoint.join(',')}&mode=drive&details=instruction_details&apiKey=${myAPIKey}`;
+   const url2 = `https://api.geoapify.com/v1/routing?waypoints=${fromWaypoint.join(',')}|${fromWay2.join(',')}|${fromWay3.join(',')}|${toWaypoint.join(',')}&mode=drive&details=instruction_details&apiKey=${myAPIKey}`;
    let resultData
    fetch(url2).then(res => res.json()).then(result => {
       resultData = result
@@ -1411,10 +1414,10 @@
             'line-width': 3,
             // Use a get expression (https://maplibre.org/maplibre-style-spec/expressions/#get)
             // to set the line-color to a feature property value.
-            'line-color': ['get', 'color']
+            'line-color': '#006aff',
          }
       });
-   });
+   })
 </script>
 
 </html>
